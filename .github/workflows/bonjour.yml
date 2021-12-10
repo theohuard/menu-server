@@ -1,18 +1,21 @@
-name: Bonjour
-on:
-  - push
+name: CI
+on :
+ - push
 jobs:
-  dire_bonjour:
+  build:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - run: ls -l
-      - run: sudo apt-get install cowsay  
-      - run: cat README.md | cowsay
- 
-    container:
-      image: ghcr.io/cicd-lectures/gitpod:latest
-      options: --user root
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: '11'
       
-     
+      - name: Run the Maven verify phase
+        run: mvn  verify
+      
+      - uses: actions/upload-artifact@v2
+        with:
+          name: menu-server
+          path: target/menu-server.jar
     
